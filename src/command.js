@@ -4,12 +4,12 @@ const TEST_COMMAND = {
     type: 1,
 };
 
-const configure = () => {
+const config = () => {
 
 }
 
 
 module.exports = {
     TEST_COMMAND,
-    configure
+    config
 }

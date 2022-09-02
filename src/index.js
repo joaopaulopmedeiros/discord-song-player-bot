@@ -1,8 +1,6 @@
 require('dotenv').config();
 
-const commands = require('./command');
-
-commands.configure();
+require('./command').config();
 
 const express = require('express');
 
