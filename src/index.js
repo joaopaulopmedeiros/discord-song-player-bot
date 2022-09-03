@@ -17,6 +17,10 @@ app.use(express.json())
 
 const PORT = process.env.PORT || 5000;
 
+app.get('/', function (req, res) {
+    return res.json({ message: 'hello world' });
+})
+
 app.post('/interactions', function (req, res) {
     const { type } = req.body;
 
