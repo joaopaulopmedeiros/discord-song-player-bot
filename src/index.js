@@ -1,42 +1,41 @@
 import 'dotenv/config';
+import { Client, GatewayIntentBits, SlashCommandBuilder, Routes } from 'discord.js';
+import { REST } from '@discordjs/rest';
 
-import {
-    InteractionType,
-    InteractionResponseType,
-} from 'discord-interactions';
+const token = process.env.DISCORD_TOKEN;
+const clientId = process.env.APP_ID;
+const guildId = process.env.GUILD_ID;
+const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
-import express from 'express';
+const commands = [
+    new SlashCommandBuilder().setName('play').setDescription('Play your favorite songs!'),
+]
+    .map(command => command.toJSON());
 
-import { config } from './command.js';
+const rest = new REST({ version: '10' }).setToken(token);
 
-import { verifyDiscord } from './utils.js';
+rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: commands })
+    .then((data) => console.log(`Successfully registered ${data.length} application commands.`))
+    .catch(console.error);
 
-config(process.env.APP_ID, process.env.GUILD_ID);
-
-const app = express();
-
-app.use(express.json({ verify: verifyDiscord(process.env.PUBLIC_KEY) }))
-
-const PORT = process.env.PORT || 5000;
-
-app.post('/interactions', function (req, res) {
-    const { type, data } = req.body;
-
-    if (type === InteractionType.PING) {
-        return res.send({ type: InteractionResponseType.PONG });
-    }
-
-    if (type === InteractionType.APPLICATION_COMMAND) {
-        const { name } = data;
-        if (name === 'play') {
-            return res.send({
-                type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-                data: {
-                    content: '\'Sup? 🤖'
-                },
-            });
-        }
-    }
+client.on('ready', () => {
+    console.log(client.user.tag)
 });
 
-app.listen(PORT, () => console.log('Server listening on port', PORT));
+client.on('interactionCreate', async interaction => {
+    if (!interaction.isChatInputCommand()) return;
+
+    const { commandName } = interaction;
+
+    if (commandName === 'ping') {
+        await interaction.reply('Pong!');
+    }
+    if (commandName === 'play') {
+        console.log(interaction);
+        await interaction.reply('\'Sup?')
+    }
+
+    console.log(`${interaction.user.tag} in #${interaction.channel.name} triggered an interaction.`);
+});
+
+client.login(token);
