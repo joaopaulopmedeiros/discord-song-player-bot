@@ -1,10 +1,13 @@
 require('dotenv').config();
 const fs = require('node:fs');
 const path = require('node:path');
-const { Client, Collection, GatewayIntentBits } = require('discord.js');
+const { Client, Collection, GatewayIntentBits, Routes } = require('discord.js');
+const { REST } = require('@discordjs/rest');
 
 const token = process.env.DISCORD_TOKEN;
-
+const guildId = process.env.GUILD_ID;
+const appId = process.env.APP_ID;
+const rest = new REST({ version: '10' }).setToken(token);
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 client.commands = new Collection();
@@ -14,8 +17,12 @@ const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('
 for (const file of commandFiles) {
     const filePath = path.join(commandsPath, file);
     const command = require(filePath);
-    client.commands.set(command.data.name, command);
+    client.commands.set(command.name, command);
 }
+
+rest.put(Routes.applicationGuildCommands(appId, guildId), { body: client.commands })
+    .then(() => console.log('Successfully registered application commands.'))
+    .catch(console.error);
 
 client.once('ready', () => {
     console.log('Ready!');

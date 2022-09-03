@@ -1,5 +1,5 @@
-import i18n from "i18n";
-import { join } from "path";
+const i18n = require('i18n');
+const { join } = require('path');
 
 i18n.configure({
     locales: [
@@ -7,7 +7,7 @@ i18n.configure({
         "pt_br",
     ],
     directory: join(__dirname, "..", "locales"),
-    defaultLocale: "en",
+    defaultLocale: "pt_br",
     retryInDefaultLocale: true,
     objectNotation: true,
     register: global,
@@ -32,4 +32,6 @@ i18n.configure({
 
 i18n.setLocale(process.env.APP_LANG || "pt_br");
 
-export { i18n };
+module.exports = {
+    i18n
+};
