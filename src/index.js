@@ -21,12 +21,10 @@ for (const file of commandFiles) {
 }
 
 rest.put(Routes.applicationGuildCommands(appId, guildId), { body: client.commands })
-    .then(() => console.log('Successfully registered application commands.'))
+    .then(() => console.log('Successfully registered all application commands'))
     .catch(console.error);
 
-client.once('ready', () => {
-    console.log('Ready!');
-});
+client.once('ready', () => console.log('Ready!'));
 
 client.on('interactionCreate', async interaction => {
     if (!interaction.isChatInputCommand()) return;
@@ -39,7 +37,7 @@ client.on('interactionCreate', async interaction => {
         await command.execute(interaction);
     } catch (error) {
         console.error(error);
-        await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+        await interaction.reply({ content: 'There was an error on attempt to execute command', ephemeral: true });
     }
 });
 
