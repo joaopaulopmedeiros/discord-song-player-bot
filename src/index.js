@@ -1,8 +1,10 @@
-require('dotenv').config();
+import 'dotenv/config';
 
-require('./command').config();
+import { config } from './command.js';
 
-const express = require('express');
+import express from 'express';
+
+config(process.env.APP_ID, process.env.GUILD_ID);
 
 const app = express();
 
