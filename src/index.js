@@ -1,12 +1,16 @@
 import 'dotenv/config';
 
+import express from 'express';
+
 import { config } from './command.js';
 
-import express from 'express';
+import { verifyDiscordClient } from './utils.js';
 
 config(process.env.APP_ID, process.env.GUILD_ID);
 
 const app = express();
+
+app.use(express.json({ verify: verifyDiscordClient(process.env.PUBLIC_KEY) }));
 
 const PORT = process.env.PORT || 5000;
 
