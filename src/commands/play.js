@@ -7,6 +7,6 @@ module.exports = {
     description: i18n.__('play.description'),
     permissions: ['CONNECT', 'SPEAK', 'ADD_REACTIONS', 'MANAGE_MESSAGES'],
     async execute(interaction) {
-        return interaction.reply('What\'s up?');
+        return interaction.reply('S\'up? 🤖');
     },
 };
