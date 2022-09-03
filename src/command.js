@@ -1,13 +1,13 @@
 import { callDiscordApi } from './utils.js';
 
-const TEST_COMMAND = {
-    name: 'test',
-    description: 'Basic guild command',
+const PLAY_COMMAND = {
+    name: 'play',
+    description: 'Play your favorite songs',
     type: 1,
 };
 
 const commands = [
-    TEST_COMMAND
+    PLAY_COMMAND
 ];
 
 const install = async (appId, guildId, command) => {

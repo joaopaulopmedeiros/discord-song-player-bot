@@ -9,22 +9,18 @@ import express from 'express';
 
 import { config } from './command.js';
 
+import { verifyDiscord } from './utils.js';
+
 config(process.env.APP_ID, process.env.GUILD_ID);
 
 const app = express();
 
-app.use(express.json())
+app.use(express.json({ verify: verifyDiscord(process.env.PUBLIC_KEY) }))
 
 const PORT = process.env.PORT || 5000;
 
-app.get('/', function (req, res) {
-    return res.send('hello world');
-})
-
 app.post('/interactions', function (req, res) {
-    const { type } = req.body;
-
-    console.log(type);
+    const { type, data } = req.body;
 
     if (type === InteractionType.PING) {
         return res.send({ type: InteractionResponseType.PONG });
@@ -32,11 +28,11 @@ app.post('/interactions', function (req, res) {
 
     if (type === InteractionType.APPLICATION_COMMAND) {
         const { name } = data;
-        if (name === 'test') {
+        if (name === 'play') {
             return res.send({
                 type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
                 data: {
-                    content: 'hello world!'
+                    content: '\'Sup? 🤖'
                 },
             });
         }
